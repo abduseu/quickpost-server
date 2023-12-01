@@ -40,9 +40,10 @@ async function run() {
 
     //Posts >> read
     app.get('/posts', async(req, res)=>{
-      const result = await posts.find().toArray()
+      const result = await posts.find().sort({ timestamp: -1 }).toArray()
       res.send(result)
     })
+
     //Posts >> read one
     app.get('/posts/:id', async(req, res)=>{
       const id = req.params.id
