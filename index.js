@@ -44,6 +44,15 @@ async function run() {
       res.send(result)
     })
 
+    //Posts >> read filber by email
+    app.get('/myposts/:id', async(req, res)=>{
+      const id = req.params.id
+      const filter = { email: id }
+
+      const result = await posts.find(filter).sort({ timestamp: -1 }).toArray()
+      res.send(result)
+    })
+
     //Posts >> read one
     app.get('/posts/:id', async(req, res)=>{
       const id = req.params.id
