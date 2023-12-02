@@ -27,11 +27,11 @@ async function run() {
 
     const database = client.db('quickpost_DB')
     const posts = database.collection('posts')
-    
+
 
     /* START CRUD OPERATIONS FOR POSTS */
     //Posts >> create
-    app.post('/posts', async(req, res)=>{
+    app.post('/posts', async (req, res) => {
       const createPost = req.body
 
       const result = await posts.insertOne(createPost)
@@ -39,13 +39,24 @@ async function run() {
     })
 
     //Posts >> read
-    app.get('/posts', async(req, res)=>{
-      const result = await posts.find().sort({ timestamp: -1 }).toArray()
+    // app.get('/posts', async(req, res)=>{
+    //   const result = await posts.find().sort({ timestamp: -1 }).toArray()
+    //   res.send(result)
+    // })
+
+    //Posts >> read some data (tags)
+    app.get('/posts', async (req, res) => {
+      let query = {}
+      if (req.query?.search) {
+        query = { tag: req.query.search }
+      }
+
+      const result = await posts.find(query).sort({ timestamp: -1 }).toArray()
       res.send(result)
     })
 
-    //Posts >> read filber by email
-    app.get('/myposts/:id', async(req, res)=>{
+    //Posts >> read filter by email
+    app.get('/myposts/:id', async (req, res) => {
       const id = req.params.id
       const filter = { email: id }
 
@@ -54,7 +65,7 @@ async function run() {
     })
 
     //Posts >> read one
-    app.get('/posts/:id', async(req, res)=>{
+    app.get('/posts/:id', async (req, res) => {
       const id = req.params.id
 
       const filter = { _id: new ObjectId(id) }
@@ -63,7 +74,7 @@ async function run() {
     })
 
     //Posts >> delete
-    app.delete('/posts/:id', async(req, res)=>{
+    app.delete('/posts/:id', async (req, res) => {
       const id = req.params.id
 
       const filter = { _id: new ObjectId(id) }
