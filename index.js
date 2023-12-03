@@ -27,6 +27,7 @@ async function run() {
 
     const database = client.db('quickpost_DB')
     const posts = database.collection('posts')
+    const users = database.collection('users')
 
 
     /* START CRUD OPERATIONS FOR POSTS */
@@ -82,6 +83,46 @@ async function run() {
       res.send(result)
     })
 
+
+    /* START CRUD OPERATIONS FOR USERS */
+    //Users >> Create (upsert)
+    app.post('/users', async (req, res) => {
+      const user = req.body;
+
+      const query = { email: user.email }
+      const existingUser = await users.findOne(query);
+      if (existingUser) {
+        return res.send({ message: 'user already exists', insertedId: null })
+      }
+      const result = await users.insertOne(user);
+      res.send(result);
+    });
+
+    //Users >> read one
+    app.get('/users/:id', async (req, res) => {
+      const id = req.params.id
+
+      const filter = { email: id }
+      const result = await users.findOne(filter)
+      res.send(result)
+    })
+
+    //Users >> update one (upsert)
+    app.put('/users/:id', async(req, res)=>{
+      const id = req.params.id
+      const goldBadge = req.body
+    
+      const filter = { email: id }
+      const options = { upsert: true }
+      const updatedUser = {
+        $set: {
+          badge2: goldBadge.badge2
+        }
+      }
+      const result = await users.updateOne(filter, updatedUser, options)
+    
+      res.send(result)
+    })
 
 
 
