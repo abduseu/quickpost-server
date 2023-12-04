@@ -28,6 +28,7 @@ async function run() {
     const database = client.db('quickpost_DB')
     const posts = database.collection('posts')
     const users = database.collection('users')
+    const announcements = database.collection('announcement')
 
 
     /* START CRUD OPERATIONS FOR POSTS */
@@ -127,6 +128,28 @@ async function run() {
       }
       const result = await users.updateOne(filter, updatedUser, options)
 
+      res.send(result)
+    })
+
+
+    /* START CRUD OPERATIONS FOR ANNOUNCEMENT */
+    //Announcement >> Count
+    app.get('/announcementCount', async(req, res)=>{
+      const count = announcements.estimatedDocumentCount()
+      res.send({count});
+    })
+
+    //Announcement >> create
+    app.post('/announcements', async (req, res) => {
+      const createAnnouncements = req.body
+
+      const result = await announcements.insertOne(createAnnouncements)
+      res.send(result)
+    })
+
+    //Announcement >> read all
+    app.get('/announcements', async (req, res) => {
+      const result = await announcements.find().toArray()
       res.send(result)
     })
 
