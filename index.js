@@ -98,6 +98,12 @@ async function run() {
       res.send(result);
     });
 
+    //Users >> read all
+    app.get('/users', async (req, res) => {
+      const result = await users.find().toArray()
+      res.send(result)
+    })
+
     //Users >> read one
     app.get('/users/:id', async (req, res) => {
       const id = req.params.id
@@ -108,10 +114,10 @@ async function run() {
     })
 
     //Users >> update one (upsert)
-    app.put('/users/:id', async(req, res)=>{
+    app.put('/users/:id', async (req, res) => {
       const id = req.params.id
       const goldBadge = req.body
-    
+
       const filter = { email: id }
       const options = { upsert: true }
       const updatedUser = {
@@ -120,7 +126,7 @@ async function run() {
         }
       }
       const result = await users.updateOne(filter, updatedUser, options)
-    
+
       res.send(result)
     })
 
