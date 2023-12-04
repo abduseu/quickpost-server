@@ -131,6 +131,22 @@ async function run() {
       res.send(result)
     })
 
+    //Users >> update one (make admin)
+    app.put('/manageUsers/:id', async (req, res) => {
+      const id = req.params.id
+      const changeRole = req.body
+
+      const filter = { _id: new ObjectId(id) }
+      const updatedUser = {
+        $set: {
+          role: changeRole.role
+        }
+      }
+      const result = await users.updateOne(filter, updatedUser)
+
+      res.send(result)
+    })
+
 
     /* START CRUD OPERATIONS FOR ANNOUNCEMENT */
     //Announcement >> Count
